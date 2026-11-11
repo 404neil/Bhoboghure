@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#100e03">
+<title>Worldguess</title>
+<!-- Default favicon is an emoji (no file to load). Set "favicon" in config.json to use your own image. -->
+<link rel="icon" id="fav" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%8D%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="top">
+  <a id="brand" href="#"><img id="logo" alt="" hidden><span id="brandText">Worldguess</span></a>
+  <button id="burger" class="ghost sm" aria-label="Menu" aria-expanded="false" aria-controls="nav">☰</button>
+  <nav id="nav"></nav>
+</header>
+
+<section id="setup" class="screen">
+  <h1 class="gt">Worldguess</h1>
+  <p data-i18n="setup.intro">Google Street View gives the best imagery and needs your own Google Maps key; Google's free monthly allowance covers normal play. The photo modes need no key.</p>
+  <h2 data-i18n="setup.h">Set up your key (once)</h2>
+  <ol>
+    <li data-i18n="setup.s1">In Google Cloud Console, create a project and enable Maps JavaScript API.</li>
+    <li data-i18n="setup.s2">Create an API key. Under Application restrictions, choose HTTP referrers and add this site's address only.</li>
+    <li data-i18n="setup.s3">Set a budget alert and a daily quota so a leaked key can't run up charges.</li>
+  </ol>
+  <input id="keyIn" type="password" data-i18n-ph="setup.ph" placeholder="Paste your API key" autocomplete="off" aria-label="Google Maps API key">
+  <p id="setupErr" class="err"></p>
+  <div class="row"><button id="saveKey" data-i18n="btn.savekey">Save key</button></div>
+  <p data-i18n="setup.priv">Your key stays in this browser. It is sent only to Google.</p>
+</section>
+
+<section id="menu" class="screen">
+  <h1 class="gt">Worldguess</h1>
+  <p data-i18n="menu.intro">Five rounds. The closer your pin, the higher the score, up to 5,000 per round.</p>
+  <p id="streak" class="streak"></p>
+  <div class="row"><select id="src" aria-label="Imagery">
+    <option value="google" data-i18n="src.google">Google Street View (your own key)</option>
+    <option value="commons" data-i18n="src.commons">Wikimedia photos (no key)</option>
+    <option value="pmx" data-i18n="src.pmx">Street photos, beta (no key)</option></select>
+    <select id="mode" aria-label="Mode">
+    <option value="classic" data-i18n="mode.classic">Classic: no timer</option>
+    <option value="timed" data-i18n="mode.timed">Timed: 60 seconds a round</option>
+    <option value="blitz" data-i18n="mode.blitz">Blitz: 20 seconds, no moving</option></select></div>
+  <label class="opt"><input type="checkbox" id="noMove"><span data-i18n="opt.nomove">No moving (look around only)</span></label>
+  <div class="row"><input type="text" id="room" data-i18n-ph="room.ph" placeholder="Room code (optional): everyone with the same code gets the same places" maxlength="32"></div>
+  <div class="row"><button id="play" data-i18n="btn.play">Play</button><button id="daily" class="ghost" data-i18n="btn.daily">Daily challenge</button><button id="lb" class="ghost" data-i18n="btn.lb">Leaderboard</button><button id="invite" class="ghost" data-i18n="btn.invite">Share invite link</button><button id="duelBtn" class="ghost" data-i18n="btn.duel">Duel a friend</button></div>
+  <div class="acct" id="acct"></div>
+  <div class="row"><button id="changeKey" class="ghost" data-i18n="key.change">Change Maps key</button></div>
+  <div class="ad" data-slot="menu"></div>
+</section>
+
+<section id="end" class="screen">
+  <h1 data-i18n="end.title">Game over</h1>
+  <div class="big" id="finalScore"></div>
+  <p id="finalNote"></p>
+  <p id="postNote"></p>
+  <div class="row"><button id="again" data-i18n="btn.again">Play again</button><button id="toBoard" class="ghost" data-i18n="btn.board">Leaderboard</button><button id="share" class="ghost" data-i18n="btn.share">Share</button></div>
+  <div class="ad" data-slot="end"></div>
+</section>
+
+<section id="board" class="screen">
+  <h1 data-i18n="board.title">Leaderboard</h1>
+  <div class="row"><select id="boardSel" aria-label="Board"></select><button id="refresh" class="ghost" data-i18n="btn.refresh">Refresh</button><button id="backMenu" class="ghost" data-i18n="btn.back">Back</button></div>
+  <table id="tbl"></table>
+  <p id="boardNote"></p>
+  <div class="ad" data-slot="board"></div>
+</section>
+
+<section id="maps" class="screen">
+  <h1 data-i18n="maps.title">Community maps</h1>
+  <p data-i18n="maps.help">Maps are lists of places made by players. Vote to lift the best to the top and sink the bad ones. Play uses the mode and imagery chosen on the Play tab.</p>
+  <div class="row"><button id="mapNew" data-i18n="maps.new">Create a map</button><button id="mapRefresh" class="ghost" data-i18n="btn.refresh">Refresh</button></div>
+  <div id="mapList"></div>
+  <p id="mapNote"></p>
+</section>
+
+<section id="mapEdit" class="screen">
+  <h1 data-i18n="maps.edit">Create a map</h1>
+  <input type="text" id="mapName" maxlength="40" data-i18n-ph="maps.name" placeholder="Map name">
+  <p data-i18n="maps.how">Click the map to add a place, or paste one "latitude, longitude" per line. You need at least 5 places.</p>
+  <div id="editMap"></div>
+  <textarea id="mapLocs" rows="5" spellcheck="false" aria-label="Places"></textarea>
+  <p id="mapCount"></p>
+  <div class="row"><button id="mapPub" data-i18n="maps.pub">Publish</button><button id="mapCancel" class="ghost" data-i18n="btn.back">Back</button></div>
+  <p id="mapEditNote"></p>
+</section>
+
+<section id="duel" class="screen">
+  <h1 data-i18n="duel.title">Duel</h1>
+  <p data-i18n="duel.help">Two players, same places, 6,000 health each. After every round the lower score loses health equal to the difference. Uses the mode and imagery chosen on the Play tab.</p>
+  <div class="row"><button id="duelCreate" data-i18n="duel.create">Create a duel</button></div>
+  <div class="row"><input type="text" id="duelCode" maxlength="12" data-i18n-ph="duel.code" placeholder="Duel code"><button id="duelJoin" class="ghost" data-i18n="duel.join">Join</button></div>
+  <p id="duelStatus"></p>
+  <div class="row"><button id="duelShare" class="ghost" hidden data-i18n="btn.invite">Share invite link</button><button id="duelCancel" class="ghost" data-i18n="btn.back">Back</button></div>
+</section>
+
+<section id="page" class="screen"><div id="pageBody" class="md"></div></section>
+
+<section id="settings" class="screen">
+  <h1 data-i18n="set.title">Settings</h1>
+  <div id="langRow"><h2 data-i18n="set.lang">Language</h2><select id="langSel" aria-label="Language"></select></div>
+  <h2 data-i18n="set.relays">Nostr relays</h2>
+  <p data-i18n="set.relays.help">One relay address per line (wss://…). Used for scores and leaderboards.</p>
+  <textarea id="relays" rows="4" spellcheck="false" aria-label="Relays"></textarea>
+  <div class="row"><button id="saveRelays" data-i18n="btn.save">Save</button><button id="resetRelays" class="ghost" data-i18n="btn.reset">Reset to default</button></div>
+  <label class="opt"><input type="checkbox" id="rtcOn"><span data-i18n="set.rtc">Try a direct WebRTC connection for duels (faster; falls back to relays)</span></label>
+  <p id="setNote"></p>
+  <h2 data-i18n="set.data">Your data</h2>
+  <p data-i18n="set.data.help">Your account is a Nostr key stored in this browser. If you clear your browser data the account is lost, so use Back up key on the Play tab to save it, and Import key to use it on another device.</p>
+  <div class="row"><button id="wipe" class="ghost" data-i18n="btn.wipe">Clear all data on this device</button></div>
+</section>
+
+<footer id="foot"></footer>
+
+<div id="game">
+  <div id="pano"></div>
+  <div id="photo"><img id="photoImg" alt="Photo to guess"></div>
+  <div id="msg"><div id="msgText">Loading…</div></div>
+  <div id="hudbar"><span id="hud"></span><button id="quit" class="ghost sm" aria-label="Quit">✕</button></div>
+  <div id="result"></div>
+  <div id="guessbox">
+    <div id="map"></div>
+    <div class="row">
+      <button id="expand" class="ghost" aria-label="Enlarge map" data-i18n="btn.map">Map</button>
+      <button id="guessBtn" disabled>Place a pin</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

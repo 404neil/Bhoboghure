@@ -1,0 +1,47 @@
+{
+  "title": "Worldguess",
+  "favicon": "",
+  "banner": "",
+  "showTitle": true,
+  "footer": "",
+  "defaultLang": "en",
+  "dailyResetOffsetMinutes": 0,
+  "relays": [
+    "wss://relay.damus.io",
+    "wss://nos.lol",
+    "wss://relay.primal.net"
+  ],
+  "theme": {},
+  "tabs": [
+    {
+      "id": "about",
+      "label": "About",
+      "file": "pages/about.md"
+    },
+    {
+      "id": "how",
+      "label": "How to play",
+      "file": "pages/instructions.md"
+    },
+    {
+      "id": "privacy",
+      "label": "Privacy",
+      "file": "pages/privacy.md"
+    }
+  ],
+  "ads": {
+    "enabled": false,
+    "client": "ca-pub-XXXXXXXXXXXXXXXX",
+    "slots": {
+      "menu": "",
+      "end": "",
+      "board": ""
+    }
+  },
+  "tiles": {
+    "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "attribution": "© OpenStreetMap contributors"
+  },
+  "panoramaxApi": "https://api.panoramax.xyz/api",
+  "mapHideBelow": -3
+}
