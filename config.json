@@ -1,11 +1,11 @@
 {
-  "title": "Worldy",
+  "title": "Worldly",
   "favicon": "favicon.png",
   "banner": "logo.png",
   "showTitle": true,
   "footer": "",
   "defaultLang": "en",
-  "dailyResetOffsetMinutes": 0,
+  "dailyResetOffsetMinutes": 330,
   "relays": [
     "wss://relay.damus.io",
     "wss://nos.lol",
