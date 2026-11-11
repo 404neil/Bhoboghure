@@ -1,7 +1,7 @@
 {
-  "title": "Worldguess",
-  "favicon": "",
-  "banner": "",
+  "title": "Worldy",
+  "favicon": "favicon.png",
+  "banner": "logo.png",
   "showTitle": true,
   "footer": "",
   "defaultLang": "en",
